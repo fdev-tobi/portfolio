@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const links = {
   sourceCode: "https://github.com/cook-blacklegsanji",
   ownerName: "Jonny Steven Perdomo Virguez",
-  ownerEmail: "davidcivello0@gmail.com",
+  ownerEmail: "ito.koji17@gmail.com",
 } as const;
 
 export const siteConfig: Metadata = {

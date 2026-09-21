@@ -56,7 +56,7 @@ export const HoverEffect = ({
             <Image
               src={item.image}
               alt={item.title}
-              className="mx-auto"
+              className="mx-auto h-auto w-auto"
               width={100}
               height={100}
             />

@@ -18,7 +18,7 @@ export const CallToAction = () => {
       >
         <div>
           <h2 className="text-white text-4xl font-medium tracking-tight">
-            Ready to Experience the Difference?
+            Ready to work with me?
           </h2>
           <div>
 

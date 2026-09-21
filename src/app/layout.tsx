@@ -1,11 +1,12 @@
+import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Tillana } from "next/font/google";
 import "./globals.css";
-import "./font.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BackTop from "@/components/BackTop";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { VisitTracker } from "@/components/VisitTracker";
+import { getSiteUrl } from "@/lib/site";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,110 +18,79 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+const tillana = Tillana({
+  subsets: ["latin"],
+  weight: ["600"],
+  variable: "--font-tillana",
+  display: "swap",
+});
 
-interface OpenGraph {
-  title: string;
-  description: string;
-  url: string;
-  type: string;
-  images: { url: string; width: number; height: number; alt: string }[];
-  siteName: string;
-}
-
-interface Twitter {
-  card: string;
-  site: string;
-  title: string;
-  description: string;
-  image: string;
-}
-
-interface Metadata {
-  title: string;
-  description: string;
-  charset?: string;
-  openGraph?: OpenGraph;
-  author?: string;
-  keywords?: string;
-  robots?: string;
-  twitter?: Twitter;
-}
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "Nexora - Expert Software Engineer",
+  metadataBase: new URL(siteUrl),
+  title: "I am a Senior AI Full-Stack Engineer",
   description:
-    "Discover the expertise of Nexora, a software engineer specializing in scalable and efficient systems. Explore innovative solutions and projects.",
-  charset: "UTF-8",
+    "I am a Senior AI Full-Stack Engineer specializing in scalable systems, blockchain, web, and AI.",
+  keywords: [
+    "software engineer",
+    "scalable systems",
+    "efficient systems",
+    "Blockchain Developer",
+    "Web Developer",
+    "AI Developer",
+    "Full Stack Developer",
+  ],
+  robots: "index, follow",
   openGraph: {
-    title: "Nexora - Expert Software Engineer",
+    title: "I am a Senior AI Full-Stack Engineer",
     description:
-      "Discover the expertise of Nexora, a software engineer specializing in scalable and efficient systems. Explore innovative solutions and projects.",
-    url: "https://chikit.vercel.app/",
+      "I am a Senior AI Full-Stack Engineer specializing in scalable systems, blockchain, web, and AI.",
+    url: siteUrl,
     type: "website",
     images: [
       {
-        url: "https://chikit.vercel.app//assets/banner.png",
+        url: "/assets/banner.png",
         width: 1200,
         height: 630,
-        alt: "Nexora Portfolio Banner",
+        alt: "Portfolio Banner",
       },
     ],
-    siteName: "Nexora Portfolio",
+    siteName: "Portfolio",
   },
-  author: "Nexora",
-  keywords:
-    "software engineer, scalable systems, efficient systems, Nexora, Blockchain Developer, Web Developer, AI Developer, Full Stack Developer",
   twitter: {
     card: "summary_large_image",
     site: "@ChiKit",
-    title: "Nexora - Expert Software Engineer",
-    description: "Discover the expertise of Nexora, a software engineer specializing in scalable and efficient systems.",
-    image: "https://chikit.vercel.app//assets/banner.png",
+    title: "I am a Senior AI Full-Stack Engineer",
+    description:
+      "I am a Senior AI Full-Stack Engineer specializing in scalable systems, blockchain, web, and AI.",
+    images: ["/assets/banner.png"],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  jobTitle: "Senior AI Full-Stack Engineer",
+  url: siteUrl,
+  sameAs: ["https://github.com/fdev-tobi"],
 };
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
-      <head>
-        <meta charSet={metadata.charset} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content={metadata.description} />
-        <meta name="keywords" content={metadata.keywords} />
-        <meta name="author" content={metadata.author} />
-        <meta property="og:type" content={metadata.openGraph?.type} />
-        <meta property="og:title" content={metadata.openGraph?.title} />
-        <meta property="og:description" content={metadata.openGraph?.description} />
-        <meta property="og:image" content={metadata.openGraph?.images[0]?.url} />
-        <meta property="og:url" content={metadata.openGraph?.url} />
-        <meta property="og:site_name" content={metadata.openGraph?.siteName} />
-        <meta name="twitter:card" content={metadata.twitter?.card} />
-        <meta name="twitter:site" content={metadata.twitter?.site} />
-        <meta name="twitter:title" content={metadata.twitter?.title} />
-        <meta name="twitter:description" content={metadata.twitter?.description} />
-        <meta name="twitter:image" content={metadata.twitter?.image} />
-        <link rel="canonical" href={metadata.openGraph?.url} />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Person",
-            name: metadata.author,
-            jobTitle: "Software Engineer",
-            url: metadata.openGraph?.url,
-            sameAs: [
-              "https://twitter.com/ChiKit",
-            ],
-          })}
-        </script>
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} ${tillana.variable} antialiased w-screen overflow-x-hidden`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <VisitTracker />
         <Header />
         {children}
         <Footer />
         <BackTop />
-        <ToastContainer />
       </body>
     </html>
   );

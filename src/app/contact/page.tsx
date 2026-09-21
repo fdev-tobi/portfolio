@@ -1,14 +1,12 @@
-import { ShootingStars } from "@/Aceternity/shooting-stars";
-import { StarsBackground } from "@/Aceternity/stars-background";
+import { StarField } from "@/components/StarField";
 import { Hero } from "./components/hero";
 
 const Contact = () => {
   return (
     <>
+      <StarField />
       <section className="bg-black relative">
         <Hero />
-        <ShootingStars />
-        <StarsBackground />
       </section>
     </>
   );

@@ -1,36 +1,36 @@
 export const Reasons = [
   {
-    title: "Expertise in Advanced Technologies",
+    title: "My expertise in advanced technologies",
     description: [
-      "Blockchain: Expertise in smart contracts, dApps, and blockchain integration for secure systems.",
-      "Full-Stack Development: Skilled in front-end and back-end technologies for seamless solutions.",
-      "Mobile App Development: Experienced in creating high-performance iOS and Android apps.",
-      "AI Solutions: Proficient in machine learning models and AI applications for data-driven insights.",
+      "Blockchain: I build smart contracts, dApps, and blockchain integrations for secure systems.",
+      "Full-Stack Development: I work with front-end and back-end technologies for seamless solutions.",
+      "Mobile App Development: I create high-performance iOS and Android apps.",
+      "AI Solutions: I build machine learning models and AI applications for data-driven insights.",
     ],
   },
   {
-    title: "Proven Track Record",
+    title: "My proven track record",
     description: [
-      "Successful Projects: A diverse portfolio demonstrating problem-solving and results.",
-      "Scalability: Designing systems that grow with your business for long-term success.",
-      "Innovation: Passionate about new technologies and methodologies to stay ahead.",
+      "Successful Projects: My portfolio shows how I solve problems and deliver results.",
+      "Scalability: I design systems that grow with your business for long-term success.",
+      "Innovation: I stay passionate about new technologies and methodologies to stay ahead.",
     ],
   },
   {
-    title: "Client-Focused Approach",
+    title: "My client-focused approach",
     description: [
-      "Comprehensive Consultation: In-depth analysis of project requirements and goals.",
-      "Customized Solutions: Services tailored to your business needs.",
-      "Transparent Communication: Regular updates and clear project progress explanations.",
-      "Exceptional Support: Dedicated post-launch maintenance and support.",
+      "Comprehensive Consultation: I analyze your project requirements and goals in depth.",
+      "Customized Solutions: I tailor my services to your business needs.",
+      "Transparent Communication: I give regular updates and clear project progress explanations.",
+      "Exceptional Support: I provide dedicated post-launch maintenance and support.",
     ],
   },
   {
-    title: "Added Value",
+    title: "The value I add",
     description: [
-      "Problem-Solving: Efficiently identifying and solving technical challenges.",
-      "Collaborative Spirit: Open to feedback and collaboration for exceeding expectations.",
-      "Continuous Learning: Staying updated with the latest technologies and best practices.",
+      "Problem-Solving: I identify and solve technical challenges efficiently.",
+      "Collaborative Spirit: I am open to feedback and collaboration so we can exceed expectations.",
+      "Continuous Learning: I stay updated with the latest technologies and best practices.",
     ],
   },
 ];

@@ -26,8 +26,12 @@ const config: Config = {
         'dark': '#1E1E1E'
       },
       fontFamily: {
-        tillana: ['"Tillana"', 'system-ui'],
-        ananda: ['"Ananda"', 'system-ui'],
+        tillana: ['var(--font-tillana)', 'system-ui'],
+        ananda: ['var(--font-tillana)', 'system-ui'],
+      },
+      backgroundImage: {
+        "gradient-conic":
+          "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
       },
       fontWeight: {
         regular: '400',

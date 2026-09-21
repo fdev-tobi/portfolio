@@ -1,18 +1,13 @@
 export const products = [
   {
-    title: "Methods Analytics",
-    link: "https://methodsanalytics.co.uk/",
-    thumbnail: "/home/methodsanalytics.png",
+    title: "AI for PDFs & documents",
+    link: "https://www.humata.ai/",
+    thumbnail: "/home/humata.png",
   },
   {
-    title: "Red Company",
-    link: "https://www.red-company.nl/",
-    thumbnail: "/home/redcompany.jpg",
-  },
-  {
-    title: "Composer",
-    link: "https://www.composer.trade/",
-    thumbnail: "/home/composer.png",
+    title: "AI assistants using company knowledge",
+    link: "https://www.myto.ai/",
+    thumbnail: "/home/myto.png",
   },
 
   {
@@ -47,7 +42,7 @@ export const products = [
     thumbnail: "/home/landshare.png",
   },
   {
-    title: "Iphone Doc",
+    title: "iPhone Doc",
     link: "https://iphone-doc.vercel.app/",
     thumbnail: "/home/iphone.png",
   },

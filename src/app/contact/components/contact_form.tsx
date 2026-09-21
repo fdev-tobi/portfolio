@@ -4,13 +4,15 @@ import { Label } from "@/Aceternity/label";
 import { Input, Textarea } from "@/Aceternity/input";
 import { cn } from "@/lib/utils";
 import { FaPaperPlane } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
 
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(form);
     const firstname = formData.get('firstname');
     const lastname = formData.get('lastname');
     const email = formData.get('email');
@@ -19,22 +21,26 @@ export const ContactForm = () => {
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ firstname, lastname, email, message }),
       });
       if (response.ok) {
-        toast.success('Message sent to Nexora, Nexora will get back to you as soon as possible.');
-        console.log('Message sent to Nexora');
+        toast.success('Message sent. I will get back to you as soon as possible.');
+        form.reset();
       } else {
-        toast.error('Failed to send message to Nexora, please try again.');
-        console.error('Failed to send message to Nexora');
+        toast.error('Failed to send message, please try again.');
       }
     } catch (error) {
-      console.error('Error sending message to Nexora:', error);
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message, please try again.');
     }
   };
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-[#2d2f33cf] border-2 border-[#44474d]">
+      <ToastContainer />
       <h2 className="font-bold text-xl text-neutral-200">
         Contact Me
       </h2>
@@ -48,16 +54,16 @@ export const ContactForm = () => {
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" name="firstname" placeholder="Tyler" type="text" />
+            <Input id="firstname" name="firstname" placeholder="Jane" type="text" />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" name="lastname" placeholder="Durden" type="text" />
+            <Input id="lastname" name="lastname" placeholder="Smith" type="text" />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" name="email" placeholder="jane@example.com" type="email" />
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">

@@ -1,8 +1,8 @@
 export const projectItems = [
   {
-    title: "Blockchain",
-    link: "blockchain",
-    src: "/assets/images/projects/blockchain.png",
+    title: "AI Solutions",
+    link: "ai-solutions",
+    src: "/assets/images/projects/ai-solutions.png",
   },
   {
     title: "Web Development",
@@ -15,19 +15,19 @@ export const projectItems = [
     src: "/assets/images/projects/mobile-development.png",
   },
   {
-    title: "AI Solutions",
-    link: "ai-solutions",
-    src: "/assets/images/projects/ai-solutions.png",
-  },
-  {
     title: "Software Development",
     link: "software-development",
-    src: "/assets/images/projects/software-development.png",
+    src: "/assets/images/projects/software-Development.png",
   },
   {
     title: "Bot Development",
     link: "bot-development",
     src: "/assets/images/projects/bot-development.png",
+  },
+  {
+    title: "Blockchain",
+    link: "blockchain",
+    src: "/assets/images/projects/blockchain.png",
   },
   {
     title: "Web Scraping",

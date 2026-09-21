@@ -97,12 +97,12 @@ export const InfiniteMovingCards = ({
             key={item.name}
           >
             <blockquote>
-              <div className="flex items-center justify-center w-full h-50 py-5">
+              <div className="flex items-center justify-center w-full h-[12.5rem] py-5">
                 <Image src={item.src} alt={item.name} width={100} height={100} className="rounded-full" />
               </div>
               <div
                 aria-hidden="true"
-                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
+                className="select-none -z-[1] pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
               <span className=" relative z-20 text-sm leading-[1.6] text-gray-100 font-normal">
                 {item.quote}

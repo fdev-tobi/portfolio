@@ -77,7 +77,7 @@ interface ItemsProps {
   outcome: string;
 }
 
-const technologyIcons: { [key: string]: JSX.Element } = {
+const technologyIcons: { [key: string]: React.ReactNode } = {
   React: <FaReact color="#61DAFB" size={25} />,
   Node: <FaNodeJs color="#3C873A" size={25} />,
   MongoDB: <SiMongodb color="#47A248" size={25} />,
@@ -155,48 +155,63 @@ export function Items({
   outcome,
 }: ItemsProps) {
   return (
-    <CardContainer className="inter-var">
-      <CardBody className="relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-black border-white/[0.2]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border">
-        <CardItem translateZ="50" className="text-xl font-bold text-white">
-          {title}
-        </CardItem>
-        <CardItem
-          as="p"
-          translateZ="60"
-          className="text-sm max-w-sm mt-2 text-neutral-300"
-        >
-          {description}
-        </CardItem>
-        <CardItem translateZ="100" className="w-full mt-4">
-          <Image
-            src={image}
-            height="1000"
-            width="1000"
-            className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl border border-white/25"
-            alt="thumbnail"
-          />
-        </CardItem>
-        <div className="flex justify-start gap-2 items-center mt-2 py-5">
-          {technologies.map((tech) =>
-            technologyIcons[tech] ? (
-              <span key={tech}>{technologyIcons[tech]}</span>
-            ) : null
-          )}
-        </div>
-        <CardItem className="w-full text-white">- {uniqueAspects}</CardItem>
-        <CardItem className="w-full text-white">- {outcome}</CardItem>
-        <div className="flex justify-center items-center mt-10">
+    <div className="h-[580px] w-full">
+      <CardContainer
+        className="inter-var !h-full !w-full"
+        containerClassName="!h-full !w-full !py-0 !items-stretch"
+      >
+        <CardBody className="relative group/card hover:shadow-2xl hover:shadow-emerald-500/[0.1] bg-black border-white/[0.2] !w-full !h-full !max-w-none rounded-xl p-6 border flex flex-col overflow-hidden">
           <CardItem
-            translateZ={20}
-            as="button"
-            className="px-4 py-2 rounded-sm bg-black text-white border border-white/25 text-xs font-bold hover:bg-white/10 transition-all duration-300"
+            translateZ="50"
+            className="!w-full text-xl font-bold text-white truncate shrink-0"
           >
-            <Link href={link} target="_blank">
-              Live view
-            </Link>
+            {title}
           </CardItem>
-        </div>
-      </CardBody>
-    </CardContainer>
+          <CardItem
+            as="p"
+            translateZ="60"
+            className="!w-full text-sm mt-2 text-neutral-300 line-clamp-2 h-10 shrink-0"
+          >
+            {description}
+          </CardItem>
+          <CardItem translateZ="100" className="!w-full mt-4 h-1/2 min-h-0 shrink-0">
+            <Image
+              src={image}
+              height="1000"
+              width="1000"
+              sizes="(max-width: 768px) 90vw, 360px"
+              className="h-full w-full object-cover rounded-xl group-hover/card:shadow-xl border border-white/25"
+              alt={title}
+            />
+          </CardItem>
+          <div className="flex justify-start gap-2 items-center mt-3 h-8 overflow-hidden shrink-0">
+            {technologies.slice(0, 7).map((tech) =>
+              technologyIcons[tech] ? (
+                <span key={tech} className="shrink-0">
+                  {technologyIcons[tech]}
+                </span>
+              ) : null
+            )}
+          </div>
+          <CardItem className="!w-full text-sm text-white mt-3 line-clamp-2 h-10 shrink-0">
+            - {uniqueAspects}
+          </CardItem>
+          <CardItem className="!w-full text-sm text-white mt-1 line-clamp-2 h-10 shrink-0">
+            - {outcome}
+          </CardItem>
+          <div className="flex justify-center items-center mt-auto pt-4 shrink-0">
+            <CardItem
+              translateZ={20}
+              as={Link}
+              href={link}
+              target="_blank"
+              className="px-4 py-2 rounded-sm bg-black text-white border border-white/25 text-xs font-bold hover:bg-white/10 transition-all duration-300"
+            >
+              Live view
+            </CardItem>
+          </div>
+        </CardBody>
+      </CardContainer>
+    </div>
   );
 }

@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
-import { SparklesCore } from "@/Aceternity/sparkles";
+import dynamic from "next/dynamic";
+
+const SparklesCore = dynamic(
+  () => import("@/Aceternity/sparkles").then((mod) => mod.SparklesCore),
+  { ssr: false }
+);
 
 export function LetsBuild() {
   return (
@@ -11,13 +16,13 @@ export function LetsBuild() {
           background="transparent"
           minSize={0.6}
           maxSize={1.4}
-          particleDensity={100}
+          particleDensity={40}
           className="w-full h-full"
           particleColor="#FFFFFF"
         />
       </div>
       <h1 className="md:text-7xl text-3xl lg:text-6xl font-bold text-center text-white relative z-20">
-        Lets Build Something Amazing Together
+        Let&apos;s build something amazing together
       </h1>
     </div>
   );

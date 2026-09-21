@@ -28,12 +28,16 @@ export const Card = React.memo(
         src={card.src}
         alt={card.title}
         fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
         className="object-cover absolute inset-0"
       />
       {hovered === index && (
-        <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 text-white bg-black/50 px-4 py-2 rounded-md border border-white/50 hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-300">
-          <Link href={`/projects/${card.link}`}>Show Details</Link>
-        </button>
+        <Link
+          href={`/projects/${card.link}`}
+          className="absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 rounded-md border border-white/50 bg-black/50 px-4 py-2 text-white transition-all duration-300 hover:scale-105 hover:bg-white/10 active:scale-95"
+        >
+          Show Details
+        </Link>
       )}
       <div
         className={cn(

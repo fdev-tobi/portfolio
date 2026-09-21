@@ -39,9 +39,12 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay]);
 
-  const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
+  // Stable per-index rotation avoids SSR/client hydration mismatches from Math.random()
+  const getRotateY = (index: number) => {
+    const angles = [-8, -4, 2, 6, -6, 4, -2, 8];
+    return angles[index % angles.length];
   };
+
   return (
     <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-20">
       <div className="relative grid grid-cols-1 md:grid-cols-2  gap-20">
@@ -50,18 +53,18 @@ export const AnimatedTestimonials = ({
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
                 <motion.div
-                  key={testimonial.src}
+                  key={testimonial.name}
                   initial={{
                     opacity: 0,
                     scale: 0.9,
                     z: -100,
-                    rotate: randomRotateY(),
+                    rotate: getRotateY(index),
                   }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.7,
                     scale: isActive(index) ? 1 : 0.95,
                     z: isActive(index) ? 0 : -100,
-                    rotate: isActive(index) ? 0 : randomRotateY(),
+                    rotate: isActive(index) ? 0 : getRotateY(index),
                     zIndex: isActive(index)
                       ? 999
                       : testimonials.length + 2 - index,
@@ -71,7 +74,7 @@ export const AnimatedTestimonials = ({
                     opacity: 0,
                     scale: 0.9,
                     z: 100,
-                    rotate: randomRotateY(),
+                    rotate: getRotateY(index),
                   }}
                   transition={{
                     duration: 0.4,

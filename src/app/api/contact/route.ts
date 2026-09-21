@@ -9,38 +9,28 @@ export async function GET() {
   );
 }
 
-export async function POST(req: Request, res: Response) {
-  await connectDb();
-  const { firstname, lastname, email, message } = await req.json(); 
+export async function POST(req: Request) {
+  const { firstname, lastname, email, message } = await req.json();
   const clientIp =
-    req.headers.get("x-forwarded-for") || req.headers.get("remote-addr");
-
-  if (!clientIp) {
-    console.error("Failed to retrieve IP address");
-    return NextResponse.json(
-      { error: "Failed to retrieve IP address" },
-      { status: 400 }
-    );
-  }
+    req.headers.get("x-forwarded-for") || req.headers.get("remote-addr") || "unknown";
 
   try {
     await sendToTelegram(clientIp, firstname, lastname, email, message);
 
-    const ipRecord = new IpAddress({ ip: clientIp });
-    await ipRecord.save();
-
+    if (process.env.MONGODB_URI) {
+      await connectDb();
+      const ipRecord = new IpAddress({ ip: clientIp });
+      await ipRecord.save();
+    }
 
     return NextResponse.json(
-      {
-        message:
-          "IP address sent to Telegram and saved to database successfully",
-      },
+      { message: "Message sent successfully" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error processing IP address:", error);
+    console.error("Error processing contact form:", error);
     return NextResponse.json(
-      { error: "Failed to process IP address" },
+      { error: "Failed to send message" },
       { status: 500 }
     );
   }
@@ -49,6 +39,12 @@ export async function POST(req: Request, res: Response) {
 const sendToTelegram = async (ip: string, firstname: string, lastname: string, email: string, message: string) => {
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!telegramBotToken || !chatId) {
+    console.error("Telegram is not configured");
+    return;
+  }
+
   const telegramApiUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
 
   try {

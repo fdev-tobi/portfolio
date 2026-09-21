@@ -1,5 +1,5 @@
 "use client";
-import { WorldMap } from "@/Aceternity/world-map";
+import dynamic from "next/dynamic";
 import { motion } from "motion/react";
 import { ContactForm } from "./contact_form";
 import Link from "next/link";
@@ -14,13 +14,19 @@ import {
   FaDiscord,
   FaWhatsapp,
 } from "react-icons/fa";
+
+const WorldMap = dynamic(
+  () => import("@/Aceternity/world-map").then((mod) => mod.WorldMap),
+  { ssr: false }
+);
+
 export const Hero = () => {
   return (
     <div className=" py-40 w-full">
       <div className="max-w-7xl mx-auto text-center pb-10 relative z-20">
         <p className="bg-clip-text text-transparent text-center bg-gradient-to-b from-white to-neutral-700 text-xl md:text-3xl lg:text-5xl font-sans py-2 md:py-10 relative z-20 font-bold tracking-tight">
-          Let&rsquo;s Build Something Amazing{" "}
-          <span className="!text-White">
+          Let&rsquo;s build something amazing{" "}
+          <span className="!text-white">
             {"Together".split("").map((word, idx) => (
               <motion.span
                 key={idx}
@@ -36,18 +42,18 @@ export const Hero = () => {
         </p>
         <p className="text-base md:text-lg text-neutral-500 max-w-2xl mx-auto py-4 relative z-20">
           Whether it&rsquo;s a blockchain project, a full-stack application, a
-          mobile app, or an AI solution, I&rsquo;m here to help
+          mobile app, or an AI solution, I&rsquo;m here to help.
         </p>
         <div className="flex justify-center mt-4 space-x-6">
           <Link
-            href="https://github.com/nexora-w"
+            href="https://github.com/fdev-tobi"
             className="hover:text-white"
             style={{ color: "#e7e7e7" }}
           >
             <FaGithub size={24} />
           </Link>
           <Link
-            href="https://t.me/@nexora77"
+            href="https://t.me/noah_claes"
             className="hover:text-white"
             style={{ color: "#0088cc" }}
           >
@@ -61,20 +67,13 @@ export const Hero = () => {
             <FaDiscord size={24} />
           </Link>
           <Link
-            href="https://wa.me/85244175972"
-            className="hover:text-white"
-            style={{ color: "#25D366" }}
-          >
-            <FaWhatsapp size={24} />
-          </Link>
-          <Link
-            href="mailto:wizrad.local@gmail.com"
+            href="mailto:ito.koji17@gmail.com"
             className="hover:text-white"
             style={{ color: "#DB4437" }}
           >
             <FaGoogle size={24} />
           </Link>
-          <Link
+          {/* <Link
             href="https://facebook.com"
             className="hover:text-white"
             style={{ color: "#3b5998" }}
@@ -101,7 +100,7 @@ export const Hero = () => {
             style={{ color: "#0077b5" }}
           >
             <FaLinkedin size={24} />
-          </Link>
+          </Link> */}
         </div>
       </div>
       <div className="w-full h-full flex items-center justify-center">
@@ -120,14 +119,14 @@ export const Hero = () => {
               },
               {
                 start: { lat: 64.2008, lng: -149.4937 }, // Alaska (Fairbanks)
-                end: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
+                end: { lat: -15.7975, lng: -67.8919 }, // Brazil (Brasília)
               },
               {
-                start: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
-                end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
+                start: { lat: -15.7975, lng: -67.8919 }, // Brazil (Brasília)
+                end: { lat: 38.7223, lng: -0.1278 }, // Lisbon
               },
               {
-                start: { lat: 51.5074, lng: -0.1278 }, // London
+                start: { lat: 38.7223, lng: -0.1278 }, // London
                 end: { lat: 28.6139, lng: 77.209 }, // New Delhi
               },
               {

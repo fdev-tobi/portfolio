@@ -25,7 +25,7 @@ export const HeroParallax = ({
   const firstRow = products.slice(0, 5);
   const secondRow = products.slice(5, 10);
   const thirdRow = products.slice(10, 15);
-  const ref = React.useRef(null);
+  const ref = React.useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -58,10 +58,8 @@ export const HeroParallax = ({
     springConfig
   );
   return (
-    <div
-      ref={ref}
-      className="h-[280vh] py-10 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
-    >
+    <div ref={ref} className="relative h-[280vh] py-10 overflow-hidden antialiased">
+      <div className="flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]">
       <Header />
       <motion.div
         style={{
@@ -78,6 +76,7 @@ export const HeroParallax = ({
               product={product}
               translate={translateX}
               key={product.title}
+              priority
             />
           ))}
         </motion.div>
@@ -100,6 +99,7 @@ export const HeroParallax = ({
           ))}
         </motion.div>
       </motion.div>
+      </div>
     </div>
   );
 };
@@ -109,14 +109,14 @@ export const Header = () => {
   return (
     <div className="max-w-full relative mx-auto py-10 md:py-20 px-4 w-full  left-0 top-0 flex flex-col items-center justify-around">
       <div>
-        <Image src="/assets/images/profile.png" alt="avatar" width={250} height={250} className="rounded-full relative z-20 border-2 border-white" />
+        <Image src="/assets/images/profile.jpg" alt="avatar" width={250} height={250} priority sizes="250px" className="rounded-full relative z-20 border-2 border-white" />
       </div>
       <div>
         <h1 className="bg-clip-text text-transparent text-center bg-gradient-to-b from-white to-neutral-700 text-2xl md:text-4xl lg:text-7xl font-sans py-2 md:py-10 relative z-20 font-bold tracking-tight">
-          Software Engineer
+          I am a Senior AI Full-Stack Engineer
         </h1>
         <p className="max-w-4xl text-base md:text-xl mt-4 text-neutral-200 relative z-20 indent-5">
-          I am a seasoned Software Engineer specializing in the development of robust and scalable digital solutions. 
+          I am a Senior AI Full-Stack Engineer specializing in the development of robust and scalable digital solutions. 
           <br />
           My expertise spans web and mobile applications, blockchain systems, and AI-driven innovations. I am dedicated to crafting efficient, user-centric, and future-proof technologies that drive business growth.
         </p>
@@ -133,6 +133,7 @@ export const Header = () => {
 export const ProductCard = ({
   product,
   translate,
+  priority = false,
 }: {
   product: {
     title: string;
@@ -140,6 +141,7 @@ export const ProductCard = ({
     thumbnail: string;
   };
   translate: MotionValue<number>;
+  priority?: boolean;
 }) => {
   return (
     <motion.div
@@ -160,6 +162,8 @@ export const ProductCard = ({
           src={product.thumbnail}
           height="600"
           width="600"
+          sizes="(max-width: 768px) 80vw, 480px"
+          priority={priority}
           className="object-cover object-left-top absolute h-full w-full inset-0"
           alt={product.title}
         />

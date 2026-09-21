@@ -1,169 +1,194 @@
 "use client";
 
 import React from "react";
-import { skills } from "@/data/skills";
+import { skills, getSkillLevel } from "@/data/skills";
 import { motion } from "framer-motion";
 import {
-  FaStar,
   FaReact,
   FaVuejs,
-  FaFlask,
-  FaRust,
   FaAngular,
-  FaGofore,
-  FaEthereum,
   FaJs,
-  FaHtml5,
-  FaCss3,
   FaPython,
   FaDocker,
   FaAws,
   FaGit,
-  FaLinux,
-  FaPhp,
-  FaShieldAlt,
   FaJava,
-  FaSwift,
-  FaStarHalfAlt,
+  FaNode,
+  FaDatabase,
+  FaHtml5,
+  FaCss3,
+  FaPhp,
+  FaRust,
+  FaLinux,
+  FaFlask,
 } from "react-icons/fa";
 import {
   SiDjango,
-  SiNuxtdotjs,
-  SiSvelte,
   SiExpress,
-  SiTailwindcss,
-  SiSolidity,
-  SiBlockchaindotcom,
   SiTypescript,
-  SiGraphql,
-  Si365Datascience,
-  SiKotlin,
-  SiScrapy,
-  SiSelenium,
-  SiCypress,
-  SiPuppeteer,
-  SiAppium,
-  SiWeb3Dotjs,
-  SiPolkadot,
   SiNextdotjs,
+  SiLangchain,
+  SiOpenai,
+  SiClaude,
+  SiPytorch,
+  SiFastapi,
+  SiDotnet,
+  SiSpringboot,
+  SiPostgresql,
+  SiMysql,
+  SiMongodb,
+  SiRedis,
+  SiGooglecloud,
+  SiKubernetes,
+  SiGithub,
+  SiGitlab,
+  SiJira,
+  SiPostman,
+  SiFigma,
+  SiSlack,
+  SiGithubactions,
+  SiHuggingface,
+  SiTensorflow,
+  SiGo,
+  SiTailwindcss,
+  SiSvelte,
+  SiNestjs,
+  SiGraphql,
+  SiPrisma,
+  SiElasticsearch,
+  SiSqlite,
+  SiAmazondynamodb,
+  SiNginx,
+  SiTerraform,
+  SiVercel,
+  SiNotion,
+  SiLinear,
+  SiScikitlearn,
 } from "react-icons/si";
-import { PiFileCSharp } from "react-icons/pi";
-import { GiArtificialIntelligence, GiVendingMachine } from "react-icons/gi";
-import { FaNode } from "react-icons/fa";
-import { TbBrandAzure } from "react-icons/tb";
-import { VscAzureDevops } from "react-icons/vsc";
-import { GoRuby } from "react-icons/go";
-import { FaC, FaFlutter } from "react-icons/fa6";
-import { TbBrandCpp } from "react-icons/tb";
-import Image from "next/image";
+import { PiFileCSharp, PiGraph, PiChatCircleDotsBold } from "react-icons/pi";
+import { GiArtificialIntelligence } from "react-icons/gi";
+import { TbBrandAzure, TbVectorBezier, TbBrain, TbApi } from "react-icons/tb";
+import { HiSparkles } from "react-icons/hi2";
+import { VscVscode } from "react-icons/vsc";
+import { LuBookOpen } from "react-icons/lu";
 import FiveStar from "./Five-star";
-type SkillName = (typeof skills)[number]["name"];
 
-const skillIcons: Record<SkillName, JSX.Element> = {
-  react: <FaReact className="w-12 h-12 mr-4" color="#61DAFB" />,
-  nextjs: <SiNextdotjs className="w-12 h-12 mr-4" color="#ffffff" />,
-  vuejs: <FaVuejs className="w-12 h-12 mr-4" color="#42b883" />,
-  nuxtjs: <SiNuxtdotjs className="w-12 h-12 mr-4" color="#00C58E" />,
-  svelte: <SiSvelte className="w-12 h-12 mr-4" color="#FF3E00" />,
-  angular: <FaAngular className="w-12 h-12 mr-4" color="#DD0031" />,
-  rust: <FaRust className="w-12 h-12 mr-4" color="#DEA584" />,
-  go: <FaGofore className="w-12 h-12 mr-4" color="#00ADD8" />,
-  csharp: <PiFileCSharp className="w-12 h-12 mr-4" color="#239120" />,
-  flask: <FaFlask className="w-12 h-12 mr-4" color="#ffffff" />,
-  django: <SiDjango className="w-12 h-12 mr-4" color="#092E20" />,
-  express: <SiExpress className="w-12 h-12 mr-4" color="#ffffff" />,
-  tailwindcss: <SiTailwindcss className="w-12 h-12 mr-4" color="#38B2AC" />,
-  solidity: <SiSolidity className="w-12 h-12 mr-4" color="#00ADD8" />,
-  ethereum: <FaEthereum className="w-12 h-12 mr-4" color="#00ADD8" />,
-  blockchain: <SiBlockchaindotcom className="w-12 h-12 mr-4" color="#121D33" />,
-  ai: <GiArtificialIntelligence className="w-12 h-12 mr-4" color="#FF5733" />,
-  javascript: <FaJs className="w-12 h-12 mr-4" color="#F7DF1E" />,
-  typescript: <SiTypescript className="w-12 h-12 mr-4" color="#3178C6" />,
-  nodejs: <FaNode className="w-12 h-12 mr-4" color="#339933" />,
-  python: <FaPython className="w-12 h-12 mr-4" color="#3776AB" />,
-  html: <FaHtml5 className="w-12 h-12 mr-4" color="#E34F26" />,
-  css: <FaCss3 className="w-12 h-12 mr-4" color="#1572B6" />,
-  graphql: <SiGraphql className="w-12 h-12 mr-4" color="#E10098" />,
-  docker: <FaDocker className="w-12 h-12 mr-4" color="#2496ED" />,
-  aws: <FaAws className="w-12 h-12 mr-4" color="#FF9900" />,
-  azure: <TbBrandAzure className="w-12 h-12 mr-4" color="#0078D4" />,
-  git: <FaGit className="w-12 h-12 mr-4" color="#F05032" />,
-  linux: <FaLinux className="w-12 h-12 mr-4" color="#FCC624" />,
-  machinelearning: (
-    <GiVendingMachine className="w-12 h-12 mr-4" color="#FF5733" />
-  ),
-  datascience: <Si365Datascience className="w-12 h-12 mr-4" color="#FF5733" />,
-  devops: <VscAzureDevops className="w-12 h-12 mr-4" color="#0078D7" />,
-  cybersecurity: <FaShieldAlt className="w-12 h-12 mr-4" color="#FF5733" />,
-  php: <FaPhp className="w-12 h-12 mr-4" color="#777BB4" />,
-  rubyonrails: <GoRuby className="w-12 h-12 mr-4" color="#CC0000" />,
-  reactnative: <FaReact className="w-12 h-12 mr-4" color="#61DAFB" />,
-  flutter: <FaFlutter className="w-12 h-12 mr-4" color="#02569B" />,
-  swift: <FaSwift className="w-12 h-12 mr-4" color="#FA7343" />,
-  kotlin: <SiKotlin className="w-12 h-12 mr-4" color="#0095D5" />,
-  java: <FaJava className="w-12 h-12 mr-4" color="#007396" />,
-  cpp: <TbBrandCpp className="w-12 h-12 mr-4" color="#00599C" />,
-  c: <FaC className="w-12 h-12 mr-4" color="#A8B9CC" />,
-  scrapy: <SiScrapy className="w-12 h-12 mr-4" color="#FF5733" />,
-  selenium: <SiSelenium className="w-12 h-12 mr-4" color="#43B02A" />,
-  puppeteer: <SiPuppeteer className="w-12 h-12 mr-4" color="#40B5A4" />,
-  playwright: (
-    <Image
-      src="/assets/icon/playwright.png"
-      alt="Playwright"
-      width={48}
-      height={48}
-    />
-  ),
-  appium: <SiAppium className="w-12 h-12 mr-4" color="#41BDF5" />,
-  cypress: <SiCypress className="w-12 h-12 mr-4" color="#17202C" />,
-  hyperledger: (
-    <Image
-      src="/assets/icon/hyperledger.svg"
-      alt="Hyperledger"
-      width={48}
-      height={48}
-    />
-  ),
-  truffle: (
-    <Image
-      src="/assets/icon/truffle.svg"
-      alt="Truffle"
-      width={48}
-      height={48}
-    />
-  ),
-  web3js: <SiWeb3Dotjs className="w-12 h-12 mr-4" color="#F16822" />,
-  ipfs: <Image src="/assets/icon/ipfs.png" alt="IPFS" width={48} height={48} />,
-  polkadot: <SiPolkadot className="w-12 h-12 mr-4" color="#E6007A" />,
+type SkillIcon = (typeof skills)[number]["icon"];
+
+const iconClass = "h-full w-full";
+
+const skillIcons: Record<SkillIcon, React.ReactNode> = {
+  // AI/LLM
+  rag: <TbBrain className={iconClass} color="#A78BFA" />,
+  langchain: <SiLangchain className={iconClass} color="#1CFFCE" />,
+  langgraph: <PiGraph className={iconClass} color="#22C55E" />,
+  openai: <SiOpenai className={iconClass} color="#10A37F" />,
+  pytorch: <SiPytorch className={iconClass} color="#EE4C2C" />,
+  claude: <SiClaude className={iconClass} color="#D97757" />,
+  embeddings: <TbVectorBezier className={iconClass} color="#8B5CF6" />,
+  vectorsearch: <GiArtificialIntelligence className={iconClass} color="#38BDF8" />,
+  prompt: <PiChatCircleDotsBold className={iconClass} color="#FBBF24" />,
+  huggingface: <SiHuggingface className={iconClass} color="#FFD21E" />,
+  tensorflow: <SiTensorflow className={iconClass} color="#FF6F00" />,
+  llamaindex: <LuBookOpen className={iconClass} color="#4F46E5" />,
+  sklearn: <SiScikitlearn className={iconClass} color="#F7931E" />,
+
+  // Language
+  python: <FaPython className={iconClass} color="#3776AB" />,
+  javascript: <FaJs className={iconClass} color="#F7DF1E" />,
+  typescript: <SiTypescript className={iconClass} color="#3178C6" />,
+  csharp: <PiFileCSharp className={iconClass} color="#512BD4" />,
+  java: <FaJava className={iconClass} color="#007396" />,
+  go: <SiGo className={iconClass} color="#00ADD8" />,
+  php: <FaPhp className={iconClass} color="#777BB4" />,
+  rust: <FaRust className={iconClass} color="#DEA584" />,
+
+  // Frontend
+  react: <FaReact className={iconClass} color="#61DAFB" />,
+  nextjs: <SiNextdotjs className={iconClass} color="#ffffff" />,
+  vuejs: <FaVuejs className={iconClass} color="#42b883" />,
+  angular: <FaAngular className={iconClass} color="#DD0031" />,
+  tailwindcss: <SiTailwindcss className={iconClass} color="#38B2AC" />,
+  html: <FaHtml5 className={iconClass} color="#E34F26" />,
+  css: <FaCss3 className={iconClass} color="#1572B6" />,
+  reactnative: <FaReact className={iconClass} color="#61DAFB" />,
+  svelte: <SiSvelte className={iconClass} color="#FF3E00" />,
+
+  // Backend
+  nodejs: <FaNode className={iconClass} color="#339933" />,
+  express: <SiExpress className={iconClass} color="#ffffff" />,
+  django: <SiDjango className={iconClass} color="#092E20" />,
+  fastapi: <SiFastapi className={iconClass} color="#009688" />,
+  nestjs: <SiNestjs className={iconClass} color="#E0234E" />,
+  dotnet: <SiDotnet className={iconClass} color="#512BD4" />,
+  springboot: <SiSpringboot className={iconClass} color="#6DB33F" />,
+  graphql: <SiGraphql className={iconClass} color="#E10098" />,
+  flask: <FaFlask className={iconClass} color="#ffffff" />,
+  restapi: <TbApi className={iconClass} color="#22D3EE" />,
+
+  // Database
+  postgresql: <SiPostgresql className={iconClass} color="#4169E1" />,
+  sql: <FaDatabase className={iconClass} color="#E8B931" />,
+  mysql: <SiMysql className={iconClass} color="#4479A1" />,
+  mongodb: <SiMongodb className={iconClass} color="#47A248" />,
+  redis: <SiRedis className={iconClass} color="#DC382D" />,
+  prisma: <SiPrisma className={iconClass} color="#ffffff" />,
+  elasticsearch: <SiElasticsearch className={iconClass} color="#005571" />,
+  sqlite: <SiSqlite className={iconClass} color="#003B57" />,
+  dynamodb: <SiAmazondynamodb className={iconClass} color="#4053D6" />,
+
+  // Cloud/DevOps
+  aws: <FaAws className={iconClass} color="#FF9900" />,
+  azure: <TbBrandAzure className={iconClass} color="#0078D4" />,
+  gcp: <SiGooglecloud className={iconClass} color="#4285F4" />,
+  docker: <FaDocker className={iconClass} color="#2496ED" />,
+  cicd: <SiGithubactions className={iconClass} color="#2088FF" />,
+  kubernetes: <SiKubernetes className={iconClass} color="#326CE5" />,
+  linux: <FaLinux className={iconClass} color="#FCC624" />,
+  nginx: <SiNginx className={iconClass} color="#009639" />,
+  terraform: <SiTerraform className={iconClass} color="#7B42BC" />,
+  vercel: <SiVercel className={iconClass} color="#ffffff" />,
+
+  // Tools
+  cursor: <HiSparkles className={iconClass} color="#A78BFA" />,
+  chatgpt: <SiOpenai className={iconClass} color="#10A37F" />,
+  git: <FaGit className={iconClass} color="#F05032" />,
+  github: <SiGithub className={iconClass} color="#ffffff" />,
+  gitlab: <SiGitlab className={iconClass} color="#FC6D26" />,
+  jira: <SiJira className={iconClass} color="#0052CC" />,
+  postman: <SiPostman className={iconClass} color="#FF6C37" />,
+  figma: <SiFigma className={iconClass} color="#F24E1E" />,
+  slack: <SiSlack className={iconClass} color="#4A154B" />,
+  vscode: <VscVscode className={iconClass} color="#007ACC" />,
+  notion: <SiNotion className={iconClass} color="#ffffff" />,
+  linear: <SiLinear className={iconClass} color="#5E6AD2" />,
 };
 
 const Skills = () => {
   return (
-    <div className="p-6 bg-black min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-8">Skills</h1>
-      <ul className="md:w-4/5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mx-auto">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 bg-black">
+      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5">
         {skills.map((skill, index) => (
           <motion.li
-            key={index}
-            className="bg-[#1d1d1d85] shadow-lg rounded-lg p-4 border border-[#374151] cursor-pointer relative group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            key={skill.icon + index}
+            className="bg-[#1d1d1d85] shadow-lg rounded-xl p-3 sm:p-4 border border-[#374151] cursor-pointer relative flex flex-col items-center justify-between gap-2 sm:gap-3 min-h-[9.5rem] sm:min-h-[11rem] touch-manipulation"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
           >
-            <div className="flex items-center justify-center mb-4 text-white">
-              {skillIcons[skill.icon as SkillName]}
+            <p className="w-full text-center text-xs sm:text-sm font-medium text-neutral-200 leading-tight line-clamp-2 min-h-[2rem] sm:min-h-[2.25rem] flex items-center justify-center px-0.5">
+              {skill.name}
+            </p>
+
+            <div className="flex h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 items-center justify-center shrink-0">
+              {skillIcons[skill.icon]}
             </div>
-            <div className="text-white flex items-center justify-center mb-4">
-              Proficiency:
-              {skill.range && <FiveStar range={skill.range} />}
-            </div>
-            <div className="hidden group-hover:block">
-              <div className="group absolute -top-12 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center rounded-sm text-center text-sm text-black before:-top-2">
-                <div className="rounded-sm bg-white py-1 px-2">
-                  <p className="whitespace-nowrap">{skill.name}</p>
-                </div>
-                <div className="h-0 w-fit border-l-8 border-r-8 border-t-8 border-transparent border-t-white"></div>
-              </div>
+
+            <div className="flex w-full flex-col items-center gap-1 sm:gap-1.5">
+              <span className="text-[10px] sm:text-xs font-medium text-neutral-300">
+                {getSkillLevel(skill.range)}
+              </span>
+              {skill.range != null && <FiveStar range={skill.range} />}
             </div>
           </motion.li>
         ))}
