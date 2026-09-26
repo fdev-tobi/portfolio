@@ -70,13 +70,13 @@ const Footer = () => {
           <FaLinkedin size={24} />
         </Link>
         <Link
-          href="https://github.com/nexora-w"
+          href="https://github.com/fdev-tobi"
           className="text-gray-500 hover:text-white"
         >
           <FaGithub size={24} />
         </Link>
         <Link
-          href="https://t.me/nexora77"
+          href="https://t.me/tobi-0922"
           className="text-gray-500 hover:text-white"
         >
           <FaTelegram size={24} />

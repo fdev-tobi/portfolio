@@ -428,7 +428,7 @@ const bot: Project[] = [
     description: "Telegram monitoring bot for wallet activity and alerts.",
     image: "/assets/images/projects/WalletWatch.jpeg",
     technologies: ["Python", "Telegram", "RestfulAPI", "Web3"],
-    link: "https://t.me/",
+    link: "https://t.me/WalletUpdateBot",
     uniqueAspects: "Wallet scanning, real-time Telegram alerts",
     outcome: "Gave users faster visibility into important wallet events.",
   },

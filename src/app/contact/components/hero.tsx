@@ -53,7 +53,7 @@ export const Hero = () => {
             <FaGithub size={24} />
           </Link>
           <Link
-            href="https://t.me/noah_claes"
+            href="https://t.me/tobi-0922"
             className="hover:text-white"
             style={{ color: "#0088cc" }}
           >
