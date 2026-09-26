@@ -1,4 +1,14 @@
-const web = [
+export type Project = {
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  link: string;
+  uniqueAspects: string;
+  outcome: string;
+};
+
+const web: Project[] = [
   {
     title: "BloxLucky",
     description: "Best Online Roblox, Rust casino, and more!",
@@ -280,7 +290,7 @@ const web = [
   },
 ];
 
-const mobile = [
+const mobile: Project[] = [
   {
     title: "MoodTunes",
     description: "Music companion app that adapts playlists to your mood.",
@@ -328,7 +338,7 @@ const mobile = [
   },
 ];
 
-const software = [
+const software: Project[] = [
   {
     title: "Inventory Control",
     description: "Inventory management software to streamline stock operations.",
@@ -376,7 +386,7 @@ const software = [
   },
 ];
 
-const bot = [
+const bot: Project[] = [
   {
     title: "Customer Service Chatbot",
     description: "AI chatbot that handles support questions around the clock.",
@@ -424,7 +434,7 @@ const bot = [
   },
 ];
 
-const blockchain = [
+const blockchain: Project[] = [
   {
     title: "Landshare",
     description: "Tokenized real estate platform bringing property ownership on-chain.",
@@ -535,7 +545,7 @@ const blockchain = [
   },
 ];
 
-const ai = [
+const ai: Project[] = [
   {
     title: "Humata",
     description: "AI for PDFs and documents — ask questions and extract answers fast.",
@@ -619,7 +629,7 @@ const ai = [
   },
 ];
 
-const scraping = [
+const scraping: Project[] = [
   {
     title: "Job Scraper",
     description: "Automated job board scraper for aggregated listings.",
