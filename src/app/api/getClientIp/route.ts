@@ -6,7 +6,8 @@ function extractClientIp(req: Request) {
   const forwarded = req.headers.get("x-forwarded-for");
   const realIp = req.headers.get("x-real-ip");
   const cfIp = req.headers.get("cf-connecting-ip");
-  const raw = forwarded || cfIp || realIp || req.headers.get("remote-addr") || "";
+  const raw =
+    forwarded || cfIp || realIp || req.headers.get("remote-addr") || "";
   return raw.split(",")[0].trim().replace(/^::ffff:/, "");
 }
 
@@ -50,14 +51,12 @@ export async function POST(req: Request) {
     }
 
     await Promise.allSettled([
-      sendVisitToTelegram(req, clientIp, returning),
+      sendVisitToTelegram(clientIp, returning),
       sendToDiscord(clientIp),
     ]);
 
     return NextResponse.json(
-      {
-        message: "Visitor alert sent successfully",
-      },
+      { message: "Visitor alert sent successfully" },
       { status: 200 }
     );
   } catch (error) {
@@ -69,20 +68,28 @@ export async function POST(req: Request) {
   }
 }
 
-const sendVisitToTelegram = async (req: Request, ip: string, returning: boolean) => {
-  const path = req.headers.get("referer") || "/";
-  const userAgent = req.headers.get("user-agent") || "";
+const sendVisitToTelegram = async (ip: string, returning: boolean) => {
   const botUrl = process.env.TELEGRAM_BOT_URL;
   const apiKey = process.env.TELEGRAM_BOT_API_KEY;
 
   if (botUrl && apiKey) {
+    const data = await lookupVisitor(ip);
     const response = await fetch(`${botUrl.replace(/\/$/, "")}/visit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": apiKey,
       },
-      body: JSON.stringify({ ip, returning, path, userAgent }),
+      body: JSON.stringify({
+        ip,
+        returning,
+        vpn: data.vpn,
+        proxy: data.proxy,
+        country: data.country,
+        region: data.region,
+        city: data.city,
+        timestamp: new Date().toISOString(),
+      }),
     });
 
     if (!response.ok) {
@@ -98,151 +105,205 @@ const sendVisitToTelegram = async (req: Request, ip: string, returning: boolean)
     return;
   }
 
-  const text = await buildVisitMessage(ip, returning, path, userAgent);
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
-  });
+  const text = await buildVisitMessage(ip);
+  const response = await fetch(
+    `https://api.telegram.org/bot${token}/sendMessage`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: "HTML",
+        disable_web_page_preview: false,
+      }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error(await response.text());
   }
 };
 
-const buildVisitMessage = async (
-  ip: string,
-  returning: boolean,
-  path: string,
-  userAgent: string
-) => {
+const buildVisitMessage = async (ip: string) => {
   const data = await lookupVisitor(ip);
-  const location = [data.city, data.region, data.country].filter(Boolean).join(", ") || "Unknown";
-  const title = returning ? "Repeat portfolio visitor" : "New portfolio visitor";
-  const risk = data.vpn
-    ? "🔴 High — VPN or proxy"
-    : data.datacenter
-      ? "🔴 High — hosting / VPS IP"
-      : "🟢 Looks like a normal ISP";
+  const timestamp = new Date().toLocaleString("en-US", {
+    timeZone: "UTC",
+  });
+  const owner = process.env.PORTFOLIO_OWNER_NAME || "Sanji";
+  const checkUrl = `https://www.ip2location.io/${encodeURIComponent(ip)}`;
 
   return [
-    `🛡️ <b>${title}</b>`,
+    `<b>${owner}'s portfolio is checked by:</b>`,
     "",
-    `🌐 <b>IP:</b> <code>${ip}</code>`,
-    `📍 <b>Location:</b> ${location}`,
-    data.timezone ? `🕒 <b>Timezone:</b> ${data.timezone}` : "",
-    `🏢 <b>ISP:</b> ${data.isp || "Unknown"}`,
-    `🏷️ <b>Org:</b> ${data.org || "Unknown"}`,
+    `<b>IP:</b> <code>${ip}</code>`,
+    `<b>VPN:</b> ${data.vpn}`,
+    `<b>Proxy:</b> ${data.proxy}`,
+    `<b>Country:</b> ${data.country}`,
+    `<b>Region:</b> ${data.region}`,
+    `<b>City:</b> ${data.city}`,
+    `<b>Timestamp:</b> ${timestamp}`,
     "",
-    `• VPN / Proxy: <b>${data.vpn ? "YES" : "No"}</b>`,
-    `• Datacenter / VPS: <b>${data.datacenter ? "YES" : "No"}</b>`,
+    `<a href="${checkUrl}">${checkUrl}</a>`,
     "",
-    risk,
-    `📄 <b>Page:</b> ${path}`,
-    userAgent ? `🖥️ <b>User-Agent:</b> <code>${userAgent.slice(0, 180)}</code>` : "",
-    `🕐 ${new Date().toISOString()}`,
-    "",
-    `🔗 <a href="https://www.ip2proxy.com/${encodeURIComponent(ip)}#proxyresult">Open IP2Proxy</a>`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+    "If vpn is business and proxy is no, in this case check that IP on ip2location.io. Or if you think you need to check double check, check on ip2location.io.",
+  ].join("\n");
 };
 
-const HOSTING_HINTS = /amazon|aws|google|azure|digitalocean|linode|vultr|ovh|hetzner|contabo|cloudflare|hostinger|leaseweb|datacenter|hosting|vps/i;
+type VisitorLookup = {
+  vpn: string;
+  proxy: string;
+  country: string;
+  region: string;
+  city: string;
+};
 
-const lookupVisitor = async (ip: string) => {
+const USAGE_TYPE_LABELS: Record<string, string> = {
+  COM: "Business",
+  ORG: "Organization",
+  GOV: "Government",
+  MIL: "Military",
+  EDU: "Education",
+  LIB: "Library",
+  CDN: "CDN",
+  ISP: "ISP",
+  MOB: "Mobile",
+  DCH: "Business",
+  SES: "Search Engine",
+  RSV: "Reserved",
+  VPN: "VPN",
+};
+
+const lookupVisitor = async (ip: string): Promise<VisitorLookup> => {
+  const fromIp2Location = await lookupIp2Location(ip);
+  if (fromIp2Location) return fromIp2Location;
+
   try {
     const response = await fetch(
-      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,regionName,city,timezone,isp,org,as,proxy,hosting,query`
+      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,regionName,city,proxy,hosting,mobile`
     );
     const data = response.ok ? await response.json() : null;
     if (data?.status === "success") {
       return {
-        city: data.city,
-        region: data.regionName,
-        country: data.country,
-        timezone: data.timezone,
-        isp: data.isp,
-        org: data.org,
-        vpn: Boolean(data.proxy),
-        datacenter: Boolean(data.hosting),
+        vpn: data.hosting ? "Business" : data.proxy ? "VPN" : "no",
+        proxy: data.proxy ? "yes" : "no",
+        country: data.country || "Unknown",
+        region: data.regionName || "Unknown",
+        city: data.city || "Unknown",
       };
     }
   } catch {
-    // Fall through to HTTPS lookup for hosts that block plain HTTP.
+    // Fall through to HTTPS lookup.
   }
 
-  const response = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`);
-  const data = response.ok ? await response.json() : {};
-  const isp = data.connection?.isp || "";
-  const org = data.connection?.org || isp;
+  try {
+    const response = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`);
+    const data = response.ok ? await response.json() : {};
+    const isProxy = Boolean(data.security?.proxy);
+    const isVpn = Boolean(data.security?.vpn);
+    const isHosting = Boolean(data.connection?.type === "hosting");
 
-  return {
-    city: data.city,
-    region: data.region,
-    country: data.country,
-    timezone: data.timezone?.id,
-    isp,
-    org,
-    vpn: Boolean(data.security?.proxy),
-    datacenter: HOSTING_HINTS.test(`${isp} ${org}`),
-  };
+    return {
+      vpn: isHosting ? "Business" : isVpn ? "VPN" : "no",
+      proxy: isProxy ? "yes" : "no",
+      country: data.country || "Unknown",
+      region: data.region || "Unknown",
+      city: data.city || "Unknown",
+    };
+  } catch {
+    return {
+      vpn: "Unknown",
+      proxy: "Unknown",
+      country: "Unknown",
+      region: "Unknown",
+      city: "Unknown",
+    };
+  }
+};
+
+const lookupIp2Location = async (
+  ip: string
+): Promise<VisitorLookup | null> => {
+  const key = process.env.IP2LOCATION_API_KEY;
+  if (!key) return null;
+
+  try {
+    const url = new URL("https://api.ip2location.io/");
+    url.searchParams.set("key", key);
+    url.searchParams.set("ip", ip);
+    url.searchParams.set("format", "json");
+
+    const response = await fetch(url.toString());
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const usageType = String(data.usage_type || "")
+      .split(",")[0]
+      .trim()
+      .toUpperCase();
+    const vpnLabel =
+      USAGE_TYPE_LABELS[usageType] ||
+      (data.is_proxy ? "VPN" : usageType || "no");
+
+    return {
+      vpn: vpnLabel,
+      proxy: data.is_proxy ? "yes" : "no",
+      country: data.country_name || "Unknown",
+      region: data.region_name || "Unknown",
+      city: data.city_name || "Unknown",
+    };
+  } catch {
+    return null;
+  }
 };
 
 const sendToDiscord = async (ip: string) => {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-  console.log(webhookUrl);
-  
+
   if (!webhookUrl) {
-    console.error("Discord webhook URL is not configured");
     return;
   }
 
   try {
+    const data = await lookupVisitor(ip);
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        embeds: [{
-          title: "@here: Website Visitor Alert! 🚀",
-          description: `Someone with IP: ${ip} just visited your website!`,
-          color: 3447003, // Blue color
-          fields: [
-            {
-              name: "IP Details",
-              value: `[View IP Info](https://www.ip2proxy.com/${ip}#proxyresult)`,
-              inline: true
-            },
-            {
-              name: "Time",
-              value: new Date().toLocaleString(),
-              inline: true
-            }
-          ],
-          footer: {
-            text: "Portfolio Visitor Tracker",
-            icon_url: "https://cdn.discordapp.com/avatars/329391537592991746/590533d740458158e7134472a6585b9a.webp?size=80"
-          }
-        }]
+        embeds: [
+          {
+            title: "Sanji's portfolio is checked by:",
+            color: 3447003,
+            fields: [
+              { name: "IP", value: ip, inline: true },
+              { name: "VPN", value: data.vpn, inline: true },
+              { name: "Proxy", value: data.proxy, inline: true },
+              { name: "Country", value: data.country, inline: true },
+              { name: "Region", value: data.region, inline: true },
+              { name: "City", value: data.city, inline: true },
+              {
+                name: "Timestamp",
+                value: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
+                inline: false,
+              },
+              {
+                name: "Check",
+                value: `[ip2location.io](https://www.ip2location.io/${encodeURIComponent(ip)})`,
+                inline: false,
+              },
+            ],
+          },
+        ],
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ Failed to send IP address to Discord:", errorText);
-      throw new Error(`Discord API error: ${errorText}`);
+      console.error("Failed to send IP address to Discord:", errorText);
     }
-
-    console.log("✅ IP address sent to Discord successfully!");
   } catch (error) {
-    console.error("⚠️ Error sending IP address to Discord:", error);
-    throw new Error("Failed to send IP address to Discord");
+    console.error("Error sending IP address to Discord:", error);
   }
 };

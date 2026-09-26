@@ -2,8 +2,18 @@
 
 import { useEffect } from "react";
 
+const VISIT_KEY = "portfolio_visit_logged";
+
 export function VisitTracker() {
   useEffect(() => {
+    // One alert per browser tab session to avoid Telegram spam on remounts
+    try {
+      if (sessionStorage.getItem(VISIT_KEY)) return;
+      sessionStorage.setItem(VISIT_KEY, "1");
+    } catch {
+      // sessionStorage unavailable — still log the visit
+    }
+
     const logVisit = () => {
       void fetch("/api/getClientIp", { method: "POST" }).catch(() => {});
     };
@@ -11,7 +21,7 @@ export function VisitTracker() {
     const idle =
       typeof window.requestIdleCallback === "function"
         ? window.requestIdleCallback
-        : (cb: IdleRequestCallback) => window.setTimeout(cb, 2000);
+        : (cb: IdleRequestCallback) => window.setTimeout(cb, 1500);
 
     const id = idle(logVisit);
 
